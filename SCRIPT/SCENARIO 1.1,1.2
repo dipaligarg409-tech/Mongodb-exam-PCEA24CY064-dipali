@@ -1,0 +1,102 @@
+// SCENARIO 1.1 - STUDENT RECORDS
+
+
+
+const college = db.getSiblingDB("college");
+
+
+college.students.insertOne({
+    rollNo: 101,
+    name: "Arun",
+    dept: "CSE",
+    marks: 78,
+    city: "Chennai"
+});
+
+
+college.students.insertMany([
+    { rollNo: 102, name: "Priya", dept: "ECE", marks: 85, city: "Chennai" },
+    { rollNo: 103, name: "Karthik", dept: "CSE", marks: 62, city: "Chennai" },
+    { rollNo: 104, name: "Divya", dept: "ECE", marks: 74, city: "Madurai" },
+    { rollNo: 105, name: "Suresh", dept: "CSE", marks: 91, city: "Trichy" }
+]);
+
+
+college.students.find().pretty();
+
+college.students.find({ dept: "CSE" }).pretty();
+
+
+college.students.updateOne(
+    { rollNo: 103 },
+    { $set: { marks: 68 } }
+);
+
+
+college.students.updateMany(
+    { dept: "CSE" },
+    { $set: { semester: 3 } }
+);
+
+college.students.deleteOne({ rollNo: 104 });
+
+
+college.students.countDocuments({});
+
+
+// SCENARIO 1.2 - EMPLOYEE DIRECTORY
+
+
+
+const hr = db.getSiblingDB("hr");
+
+
+hr.employees.insertMany([
+    { empId: 1, name: "Anita", dept: "HR", salary: 42000, city: "Chennai" },
+    { empId: 2, name: "Bala", dept: "IT", salary: 65000, city: "Bengaluru" },
+    { empId: 3, name: "Charan", dept: "IT", salary: 58000, city: "Chennai" },
+    { empId: 4, name: "Deepa", dept: "Finance", salary: 50000, city: "Mumbai" },
+    { empId: 5, name: "Elan", dept: "IT", salary: 72000, city: "Chennai" },
+    { empId: 6, name: "Farah", dept: "HR", salary: 45000, city: "Delhi" },
+    { empId: 7, name: "Gopal", dept: "Finance", salary: 61000, city: "Chennai" },
+    { empId: 8, name: "Hema", dept: "Sales", salary: 38000, city: "Hyderabad" }
+]);
+
+hr.employees.find({
+    salary: { $gt: 60000 }
+}).pretty();
+
+hr.employees.find({
+    salary: { $gte: 45000, $lte: 60000 }
+}).pretty();
+
+hr.employees.find({
+    dept: { $in: ["IT", "Finance"] }
+}).pretty();
+
+hr.employees.find({
+    $and: [
+        { city: "Chennai" },
+        { salary: { $gt: 50000 } }
+    ]
+}).pretty();
+
+hr.employees.find({
+    $or: [
+        { dept: "HR" },
+        { salary: { $gt: 70000 } }
+    ]
+}).pretty();
+
+hr.employees.find({
+    city: { $nin: ["Chennai", "Bengaluru"] }
+}).pretty();
+
+hr.employees.find({
+    name: { $regex: "^[ABC]" }
+}).pretty();
+
+hr.employees.find(
+    {},
+    { _id: 0, name: 1, salary: 1 }
+).sort({ salary: -1 }).skip(2).limit(3).pretty();
